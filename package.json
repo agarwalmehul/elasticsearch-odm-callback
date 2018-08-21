@@ -1,0 +1,33 @@
+{
+  "name": "elasticsearch-odm-callback",
+  "version": "0.1.0",
+  "description": "Elasticsearch Object Document Mapping using Callback Pattern",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:source": "rimraf dist/ && babel src/ --out-dir dist/",
+    "clean": "rimraf dist/ && rimraf test-dist/",
+    "build": "npm run build:source"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agarwalmehul/elasticsearch-odm-callback.git"
+  },
+  "keywords": [],
+  "author": "Mehul Agarwal <agarwalmehul92@gmail.com>",
+  "license": "GNU",
+  "bugs": {
+    "url": "https://github.com/agarwalmehul/elasticsearch-odm-callback/issues"
+  },
+  "homepage": "https://github.com/agarwalmehul/elasticsearch-odm-callback#readme",
+  "dependencies": {
+    "async": "^2.6.1"
+  },
+  "devDependencies": {
+    "babel-cli": "6.16.0",
+    "babel-core": "6.16.0",
+    "babel-eslint": "7.0.0",
+    "babel-preset-es2015": "6.16.0",
+    "rimraf": "^2.6.2"
+  }
+}
