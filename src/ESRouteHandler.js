@@ -1,6 +1,6 @@
 'use strict'
 
-import { ResponseBody } from '../lib'
+import { ResponseBody } from './ResponseBody'
 
 export class ESRouteHandler {
   constructor (Model) {

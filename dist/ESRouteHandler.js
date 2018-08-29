@@ -7,7 +7,7 @@ exports.ESRouteHandler = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _lib = require('../lib');
+var _ResponseBody = require('./ResponseBody');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -46,7 +46,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
           return next();
         }
 
-        responseBody = new _lib.ResponseBody(201, 'OK', data);
+        responseBody = new _ResponseBody.ResponseBody(201, 'OK', data);
         response.body = responseBody;
         next();
       });
@@ -71,7 +71,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
           return next();
         }
 
-        responseBody = new _lib.ResponseBody(200, 'OK', data);
+        responseBody = new _ResponseBody.ResponseBody(200, 'OK', data);
         response.body = responseBody;
         next();
       });
@@ -95,7 +95,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
           return next();
         }
 
-        responseBody = new _lib.ResponseBody(200, 'OK', data);
+        responseBody = new _ResponseBody.ResponseBody(200, 'OK', data);
         response.body = responseBody;
         next();
       });
@@ -118,7 +118,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
           return next();
         }
 
-        responseBody = new _lib.ResponseBody(200, 'OK', data);
+        responseBody = new _ResponseBody.ResponseBody(200, 'OK', data);
         response.body = responseBody;
         next();
       });
@@ -143,7 +143,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
           return next();
         }
 
-        responseBody = new _lib.ResponseBody(200, 'OK');
+        responseBody = new _ResponseBody.ResponseBody(200, 'OK');
         response.body = responseBody;
         next();
       });
@@ -157,7 +157,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
         response.body = error;
         return true;
       } else if (error) {
-        responseBody = new _lib.ResponseBody(500, error.toString(), error);
+        responseBody = new _ResponseBody.ResponseBody(500, error.toString(), error);
         response.body = responseBody;
         return true;
       }
