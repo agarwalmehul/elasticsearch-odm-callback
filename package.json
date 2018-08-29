@@ -1,6 +1,6 @@
 {
   "name": "elasticsearch-odm-callback",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Elasticsearch Object Document Mapping using Callback Pattern",
   "main": "dist/index.js",
   "scripts": {
@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/agarwalmehul/elasticsearch-odm-callback#readme",
   "dependencies": {
-    "async": "^2.6.1"
+    "async": "^2.5.0",
+    "elasticsearch": "^14.0.0"
   },
   "devDependencies": {
     "babel-cli": "6.16.0",
