@@ -45,10 +45,12 @@ var ESModel = exports.ESModel = function () {
 
     // Method Hard-binding
     this.createIndex = this.createIndex.bind(this);
+    this.removeIndex = this.removeIndex.bind(this);
     this.create = this.create.bind(this);
     this.findById = this.findById.bind(this);
     this.search = this.search.bind(this);
     this.scan = this.scan.bind(this);
+    this.scroll = this.scroll.bind(this);
     this.remove = this.remove.bind(this);
   }
 
@@ -80,6 +82,27 @@ var ESModel = exports.ESModel = function () {
         }
 
         callback(null, response);
+      });
+    }
+  }, {
+    key: 'removeIndex',
+    value: function removeIndex(callback) {
+      var Client = this.Client,
+          index = this.index;
+
+
+      Client.indices.delete({
+        index: index
+      }, function (error, response) {
+        if (error) {
+          var status = error.status,
+              displayName = error.displayName;
+
+          var err = new _ResponseBody.ResponseBody(status, displayName, error);
+          return callback(err);
+        }
+
+        return callback();
       });
     }
   }, {
@@ -215,6 +238,51 @@ var ESModel = exports.ESModel = function () {
         });
         return callback(null, hits);
       });
+    }
+  }, {
+    key: 'scroll',
+    value: function scroll(params, callback) {
+      var Client = this.Client,
+          index = this.index;
+      var query = params.query,
+          scrollDuration = params.scrollDuration;
+
+      var body = { query: query };
+      var allRecords = [];
+
+      var responseHandler = function responseHandler(error, response) {
+        if (error) {
+          var status = error.status,
+              displayName = error.displayName;
+
+          var responseBody = new _ResponseBody.ResponseBody(status, displayName, error);
+          return callback(responseBody);
+        }
+
+        var _response$hits = response.hits,
+            hits = _response$hits === undefined ? {} : _response$hits;
+
+        var allHits = hits.hits || [];
+
+        allHits.forEach(function (hit) {
+          return allRecords.push(hit._source);
+        });
+
+        if (hits.total === allRecords.length) {
+          return callback(null, allRecords);
+        }
+
+        Client.scroll({
+          scrollId: response._scroll_id,
+          scroll: scrollDuration
+        }, responseHandler);
+      };
+
+      Client.search({
+        index: index,
+        scroll: scrollDuration,
+        body: body
+      }, responseHandler);
     }
   }, {
     key: 'remove',

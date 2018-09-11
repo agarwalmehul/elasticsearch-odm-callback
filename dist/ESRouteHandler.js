@@ -19,6 +19,8 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
 
     // Method Hard-Binding to allow them to be assigned to
     // other variables and work as expected
+    this.createIndex = this.createIndex.bind(this);
+    this.removeIndex = this.removeIndex.bind(this);
     this.create = this.create.bind(this);
     this.findById = this.findById.bind(this);
     this.search = this.search.bind(this);
@@ -28,9 +30,47 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
   }
 
   _createClass(ESRouteHandler, [{
+    key: 'createIndex',
+    value: function createIndex(request, response) {
+      var _this = this;
+
+      var Model = this.Model;
+
+
+      Model.createIndex(function (error) {
+        var responseBody = void 0;
+        if (_this._handleError(error, response)) {
+          return;
+        }
+
+        responseBody = new _ResponseBody.ResponseBody(200, 'OK');
+        response.statusMessage = responseBody.message;
+        response.status(responseBody.statusCode).json(responseBody);
+      });
+    }
+  }, {
+    key: 'removeIndex',
+    value: function removeIndex(request, response) {
+      var _this2 = this;
+
+      var Model = this.Model;
+
+
+      Model.removeIndex(function (error) {
+        var responseBody = void 0;
+        if (_this2._handleError(error, response)) {
+          return;
+        }
+
+        responseBody = new _ResponseBody.ResponseBody(200, 'OK');
+        response.statusMessage = responseBody.message;
+        response.status(responseBody.statusCode).json(responseBody);
+      });
+    }
+  }, {
     key: 'create',
     value: function create(request, response, next) {
-      var _this = this;
+      var _this3 = this;
 
       if (response.body) {
         return process.nextTick(next);
@@ -42,7 +82,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
 
       Model.create(body, function (error, data) {
         var responseBody = void 0;
-        if (_this._handleError(error, response)) {
+        if (_this3._handleError(error, response)) {
           return next();
         }
 
@@ -54,7 +94,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
   }, {
     key: 'findById',
     value: function findById(request, response, next) {
-      var _this2 = this;
+      var _this4 = this;
 
       if (response.body) {
         return process.nextTick(next);
@@ -67,7 +107,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
 
       Model.findById(id, function (error, data) {
         var responseBody = void 0;
-        if (_this2._handleError(error, response)) {
+        if (_this4._handleError(error, response)) {
           return next();
         }
 
@@ -79,7 +119,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
   }, {
     key: 'search',
     value: function search(request, response, next) {
-      var _this3 = this;
+      var _this5 = this;
 
       if (response.body) {
         return process.nextTick(next);
@@ -91,7 +131,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
 
       Model.search({ match: query }, function (error, data) {
         var responseBody = void 0;
-        if (_this3._handleError(error, response)) {
+        if (_this5._handleError(error, response)) {
           return next();
         }
 
@@ -103,7 +143,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
   }, {
     key: 'scan',
     value: function scan(request, response, next) {
-      var _this4 = this;
+      var _this6 = this;
 
       if (response.body) {
         return process.nextTick(next);
@@ -114,7 +154,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
 
       Model.scan(function (error, data) {
         var responseBody = void 0;
-        if (_this4._handleError(error, response)) {
+        if (_this6._handleError(error, response)) {
           return next();
         }
 
@@ -126,7 +166,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
   }, {
     key: 'remove',
     value: function remove(request, response, next) {
-      var _this5 = this;
+      var _this7 = this;
 
       if (response.body) {
         return process.nextTick(next);
@@ -139,7 +179,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
 
       Model.remove(id, function (error) {
         var responseBody = void 0;
-        if (_this5._handleError(error, response)) {
+        if (_this7._handleError(error, response)) {
           return next();
         }
 

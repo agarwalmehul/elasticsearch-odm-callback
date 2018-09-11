@@ -8,12 +8,40 @@ export class ESRouteHandler {
 
     // Method Hard-Binding to allow them to be assigned to
     // other variables and work as expected
+    this.createIndex = this.createIndex.bind(this)
+    this.removeIndex = this.removeIndex.bind(this)
     this.create = this.create.bind(this)
     this.findById = this.findById.bind(this)
     this.search = this.search.bind(this)
     this.scan = this.scan.bind(this)
     this.remove = this.remove.bind(this)
     this._handleError = this._handleError.bind(this)
+  }
+
+  createIndex (request, response) {
+    const { Model } = this
+
+    Model.createIndex(error => {
+      let responseBody
+      if (this._handleError(error, response)) { return }
+
+      responseBody = new ResponseBody(200, 'OK')
+      response.statusMessage = responseBody.message
+      response.status(responseBody.statusCode).json(responseBody)
+    })
+  }
+
+  removeIndex (request, response) {
+    const { Model } = this
+
+    Model.removeIndex(error => {
+      let responseBody
+      if (this._handleError(error, response)) { return }
+
+      responseBody = new ResponseBody(200, 'OK')
+      response.statusMessage = responseBody.message
+      response.status(responseBody.statusCode).json(responseBody)
+    })
   }
 
   create (request, response, next) {

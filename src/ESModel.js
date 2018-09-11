@@ -23,10 +23,12 @@ export class ESModel {
 
     // Method Hard-binding
     this.createIndex = this.createIndex.bind(this)
+    this.removeIndex = this.removeIndex.bind(this)
     this.create = this.create.bind(this)
     this.findById = this.findById.bind(this)
     this.search = this.search.bind(this)
     this.scan = this.scan.bind(this)
+    this.scroll = this.scroll.bind(this)
     this.remove = this.remove.bind(this)
   }
 
@@ -50,6 +52,22 @@ export class ESModel {
       }
 
       callback(null, response)
+    })
+  }
+
+  removeIndex (callback) {
+    const { Client, index } = this
+
+    Client.indices.delete({
+      index
+    }, (error, response) => {
+      if (error) {
+        const { status, displayName } = error
+        const err = new ResponseBody(status, displayName, error)
+        return callback(err)
+      }
+
+      return callback()
     })
   }
 
@@ -147,6 +165,39 @@ export class ESModel {
       })
       return callback(null, hits)
     })
+  }
+
+  scroll (params, callback) {
+    const { Client, index } = this
+    const { query, scrollDuration } = params
+    const body = { query }
+    let allRecords = []
+
+    const responseHandler = function (error, response) {
+      if (error) {
+        const { status, displayName } = error
+        const responseBody = new ResponseBody(status, displayName, error)
+        return callback(responseBody)
+      }
+
+      let { hits = {} } = response
+      const allHits = hits.hits || []
+
+      allHits.forEach(hit => allRecords.push(hit._source))
+
+      if (hits.total === allRecords.length) { return callback(null, allRecords) }
+
+      Client.scroll({
+        scrollId: response._scroll_id,
+        scroll: scrollDuration
+      }, responseHandler)
+    }
+
+    Client.search({
+      index,
+      scroll: scrollDuration,
+      body
+    }, responseHandler)
   }
 
   remove (id, callback) {
