@@ -14,6 +14,7 @@ export class ESRouteHandler {
     this.findById = this.findById.bind(this)
     this.search = this.search.bind(this)
     this.scan = this.scan.bind(this)
+    this.update = this.update.bind(this)
     this.remove = this.remove.bind(this)
     this._handleError = this._handleError.bind(this)
   }
@@ -103,6 +104,22 @@ export class ESRouteHandler {
       if (this._handleError(error, response)) { return next() }
 
       responseBody = new ResponseBody(200, 'OK', data)
+      response.body = responseBody
+      next()
+    })
+  }
+
+  update (request, response, next) {
+    if (response.body) { return process.nextTick(next) }
+
+    const { Model } = this
+    const { body } = request
+
+    Model.update(body, error => {
+      let responseBody
+      if (this._handleError(error, response)) { return next() }
+
+      responseBody = new ResponseBody(200, 'OK')
       response.body = responseBody
       next()
     })

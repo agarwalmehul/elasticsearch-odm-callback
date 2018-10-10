@@ -200,6 +200,28 @@ export class ESModel {
     }, responseHandler)
   }
 
+  update (attrs, callback) {
+    const { Client, index, type, Class } = this
+    const doc = new Class(attrs)
+    const { id } = doc
+    const body = { doc }
+
+    Client.update({
+      index,
+      type,
+      id,
+      body
+    }, (error, response) => {
+      if (error) {
+        const { status, displayName, message } = error
+        const responseBody = new ResponseBody(status, displayName, message)
+        return callback(responseBody)
+      }
+
+      callback(null, response)
+    })
+  }
+
   remove (id, callback) {
     const { Client, index, type } = this
 

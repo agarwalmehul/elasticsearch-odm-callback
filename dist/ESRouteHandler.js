@@ -25,6 +25,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
     this.findById = this.findById.bind(this);
     this.search = this.search.bind(this);
     this.scan = this.scan.bind(this);
+    this.update = this.update.bind(this);
     this.remove = this.remove.bind(this);
     this._handleError = this._handleError.bind(this);
   }
@@ -164,9 +165,33 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
       });
     }
   }, {
+    key: 'update',
+    value: function update(request, response, next) {
+      var _this7 = this;
+
+      if (response.body) {
+        return process.nextTick(next);
+      }
+
+      var Model = this.Model;
+      var body = request.body;
+
+
+      Model.update(body, function (error) {
+        var responseBody = void 0;
+        if (_this7._handleError(error, response)) {
+          return next();
+        }
+
+        responseBody = new _ResponseBody.ResponseBody(200, 'OK');
+        response.body = responseBody;
+        next();
+      });
+    }
+  }, {
     key: 'remove',
     value: function remove(request, response, next) {
-      var _this7 = this;
+      var _this8 = this;
 
       if (response.body) {
         return process.nextTick(next);
@@ -179,7 +204,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
 
       Model.remove(id, function (error) {
         var responseBody = void 0;
-        if (_this7._handleError(error, response)) {
+        if (_this8._handleError(error, response)) {
           return next();
         }
 

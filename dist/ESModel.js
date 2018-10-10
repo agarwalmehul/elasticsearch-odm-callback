@@ -285,6 +285,37 @@ var ESModel = exports.ESModel = function () {
       }, responseHandler);
     }
   }, {
+    key: 'update',
+    value: function update(attrs, callback) {
+      var Client = this.Client,
+          index = this.index,
+          type = this.type,
+          Class = this.Class;
+
+      var doc = new Class(attrs);
+      var id = doc.id;
+
+      var body = { doc: doc };
+
+      Client.update({
+        index: index,
+        type: type,
+        id: id,
+        body: body
+      }, function (error, response) {
+        if (error) {
+          var status = error.status,
+              displayName = error.displayName,
+              message = error.message;
+
+          var responseBody = new _ResponseBody.ResponseBody(status, displayName, message);
+          return callback(responseBody);
+        }
+
+        callback(null, response);
+      });
+    }
+  }, {
     key: 'remove',
     value: function remove(id, callback) {
       var Client = this.Client,
