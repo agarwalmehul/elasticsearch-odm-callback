@@ -39,3 +39,15 @@ Object.keys(_ESRouteHandler).forEach(function (key) {
     }
   });
 });
+
+var _ResponseBody = require('./ResponseBody');
+
+Object.keys(_ResponseBody).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _ResponseBody[key];
+    }
+  });
+});

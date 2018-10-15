@@ -32,7 +32,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
 
   _createClass(ESRouteHandler, [{
     key: 'createIndex',
-    value: function createIndex(request, response) {
+    value: function createIndex(request, response, next) {
       var _this = this;
 
       var Model = this.Model;
@@ -45,13 +45,13 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
         }
 
         responseBody = new _ResponseBody.ResponseBody(200, 'OK');
-        response.statusMessage = responseBody.message;
-        response.status(responseBody.statusCode).json(responseBody);
+        response.body = responseBody;
+        next();
       });
     }
   }, {
     key: 'removeIndex',
-    value: function removeIndex(request, response) {
+    value: function removeIndex(request, response, next) {
       var _this2 = this;
 
       var Model = this.Model;
@@ -64,8 +64,8 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
         }
 
         responseBody = new _ResponseBody.ResponseBody(200, 'OK');
-        response.statusMessage = responseBody.message;
-        response.status(responseBody.statusCode).json(responseBody);
+        response.body = responseBody;
+        next();
       });
     }
   }, {

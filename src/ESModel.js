@@ -29,6 +29,7 @@ export class ESModel {
     this.search = this.search.bind(this)
     this.scan = this.scan.bind(this)
     this.scroll = this.scroll.bind(this)
+    this.update = this.update.bind(this)
     this.remove = this.remove.bind(this)
   }
 

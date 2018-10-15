@@ -19,7 +19,7 @@ export class ESRouteHandler {
     this._handleError = this._handleError.bind(this)
   }
 
-  createIndex (request, response) {
+  createIndex (request, response, next) {
     const { Model } = this
 
     Model.createIndex(error => {
@@ -27,12 +27,12 @@ export class ESRouteHandler {
       if (this._handleError(error, response)) { return }
 
       responseBody = new ResponseBody(200, 'OK')
-      response.statusMessage = responseBody.message
-      response.status(responseBody.statusCode).json(responseBody)
+      response.body = responseBody
+      next()
     })
   }
 
-  removeIndex (request, response) {
+  removeIndex (request, response, next) {
     const { Model } = this
 
     Model.removeIndex(error => {
@@ -40,8 +40,8 @@ export class ESRouteHandler {
       if (this._handleError(error, response)) { return }
 
       responseBody = new ResponseBody(200, 'OK')
-      response.statusMessage = responseBody.message
-      response.status(responseBody.statusCode).json(responseBody)
+      response.body = responseBody
+      next()
     })
   }
 
