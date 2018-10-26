@@ -53,6 +53,7 @@ var ESModel = exports.ESModel = function () {
     this.scroll = this.scroll.bind(this);
     this.update = this.update.bind(this);
     this.remove = this.remove.bind(this);
+    this.removeBy = this.removeBy.bind(this);
   }
 
   _createClass(ESModel, [{
@@ -338,6 +339,30 @@ var ESModel = exports.ESModel = function () {
         }
 
         return callback();
+      });
+    }
+  }, {
+    key: 'removeBy',
+    value: function removeBy(query, callback) {
+      var Client = this.Client,
+          index = this.index;
+
+      var body = { query: query };
+
+      Client.deleteByQuery({
+        index: index,
+        body: body
+      }, function (error, response) {
+        if (error) {
+          var status = error.status,
+              displayName = error.displayName,
+              message = error.message;
+
+          var responseBody = new _ResponseBody.ResponseBody(status, displayName, message);
+          return callback(responseBody);
+        }
+
+        callback(null, response);
       });
     }
   }]);

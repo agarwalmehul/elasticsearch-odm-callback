@@ -31,6 +31,7 @@ export class ESModel {
     this.scroll = this.scroll.bind(this)
     this.update = this.update.bind(this)
     this.remove = this.remove.bind(this)
+    this.removeBy = this.removeBy.bind(this)
   }
 
   createIndex (callback) {
@@ -238,6 +239,24 @@ export class ESModel {
       }
 
       return callback()
+    })
+  }
+
+  removeBy (query, callback) {
+    const { Client, index } = this
+    const body = { query }
+
+    Client.deleteByQuery({
+      index,
+      body
+    }, (error, response) => {
+      if (error) {
+        const { status, displayName, message } = error
+        const responseBody = new ResponseBody(status, displayName, message)
+        return callback(responseBody)
+      }
+
+      callback(null, response)
     })
   }
 }
