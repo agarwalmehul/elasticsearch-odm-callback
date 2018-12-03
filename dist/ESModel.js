@@ -41,7 +41,6 @@ var ESModel = exports.ESModel = function () {
     this.type = _type;
     this.settings = _settings;
     this.properties = _properties;
-    this.Client = new _ESClient.ESClient(CONFIG);
 
     // Method Hard-binding
     this.createIndex = this.createIndex.bind(this);
@@ -59,12 +58,13 @@ var ESModel = exports.ESModel = function () {
   _createClass(ESModel, [{
     key: 'createIndex',
     value: function createIndex(callback) {
-      var Client = this.Client,
+      var CONFIG = this.CONFIG,
           index = this.index,
           type = this.type,
           settings = this.settings,
           properties = this.properties;
 
+      var Client = new _ESClient.ESClient(CONFIG);
       var body = {
         settings: Object.assign({}, DEFAULT_SETTING, settings),
         mappings: _defineProperty({}, type, { properties: properties })
@@ -89,9 +89,10 @@ var ESModel = exports.ESModel = function () {
   }, {
     key: 'removeIndex',
     value: function removeIndex(callback) {
-      var Client = this.Client,
+      var CONFIG = this.CONFIG,
           index = this.index;
 
+      var Client = new _ESClient.ESClient(CONFIG);
 
       Client.indices.delete({
         index: index
@@ -110,11 +111,12 @@ var ESModel = exports.ESModel = function () {
   }, {
     key: 'create',
     value: function create(attrs, callback) {
-      var Client = this.Client,
+      var CONFIG = this.CONFIG,
           Class = this.Class,
           index = this.index,
           type = this.type;
 
+      var Client = new _ESClient.ESClient(CONFIG);
       var body = new Class(attrs);
       var id = body.id;
 
@@ -139,10 +141,11 @@ var ESModel = exports.ESModel = function () {
   }, {
     key: 'findById',
     value: function findById(id, callback) {
-      var Client = this.Client,
+      var CONFIG = this.CONFIG,
           index = this.index,
           type = this.type;
 
+      var Client = new _ESClient.ESClient(CONFIG);
 
       Client.get({
         index: index,
@@ -169,9 +172,10 @@ var ESModel = exports.ESModel = function () {
   }, {
     key: 'search',
     value: function search(query, callback) {
-      var Client = this.Client,
+      var CONFIG = this.CONFIG,
           index = this.index;
 
+      var Client = new _ESClient.ESClient(CONFIG);
       var body = {
         query: query
       };
@@ -205,9 +209,10 @@ var ESModel = exports.ESModel = function () {
   }, {
     key: 'scan',
     value: function scan(callback) {
-      var Client = this.Client,
+      var CONFIG = this.CONFIG,
           index = this.index;
 
+      var Client = new _ESClient.ESClient(CONFIG);
       var body = {
         query: {
           match_all: {}
@@ -244,8 +249,10 @@ var ESModel = exports.ESModel = function () {
   }, {
     key: 'scroll',
     value: function scroll(params, callback) {
-      var Client = this.Client,
+      var CONFIG = this.CONFIG,
           index = this.index;
+
+      var Client = new _ESClient.ESClient(CONFIG);
       var query = params.query,
           scrollDuration = params.scrollDuration;
 
@@ -289,11 +296,12 @@ var ESModel = exports.ESModel = function () {
   }, {
     key: 'update',
     value: function update(attrs, callback) {
-      var Client = this.Client,
+      var CONFIG = this.CONFIG,
           index = this.index,
           type = this.type,
           Class = this.Class;
 
+      var Client = new _ESClient.ESClient(CONFIG);
       var doc = new Class(attrs);
       var id = doc.id;
 
@@ -320,10 +328,11 @@ var ESModel = exports.ESModel = function () {
   }, {
     key: 'remove',
     value: function remove(id, callback) {
-      var Client = this.Client,
+      var CONFIG = this.CONFIG,
           index = this.index,
           type = this.type;
 
+      var Client = new _ESClient.ESClient(CONFIG);
 
       Client.delete({
         index: index,
@@ -344,9 +353,10 @@ var ESModel = exports.ESModel = function () {
   }, {
     key: 'removeBy',
     value: function removeBy(query, callback) {
-      var Client = this.Client,
+      var CONFIG = this.CONFIG,
           index = this.index;
 
+      var Client = new _ESClient.ESClient(CONFIG);
       var body = { query: query };
 
       Client.deleteByQuery({

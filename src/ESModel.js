@@ -19,7 +19,6 @@ export class ESModel {
     this.type = _type
     this.settings = _settings
     this.properties = _properties
-    this.Client = new ESClient(CONFIG)
 
     // Method Hard-binding
     this.createIndex = this.createIndex.bind(this)
@@ -35,7 +34,8 @@ export class ESModel {
   }
 
   createIndex (callback) {
-    const { Client, index, type, settings, properties } = this
+    const { CONFIG, index, type, settings, properties } = this
+    const Client = new ESClient(CONFIG)
     const body = {
       settings: Object.assign({}, DEFAULT_SETTING, settings),
       mappings: {
@@ -58,7 +58,8 @@ export class ESModel {
   }
 
   removeIndex (callback) {
-    const { Client, index } = this
+    const { CONFIG, index } = this
+    const Client = new ESClient(CONFIG)
 
     Client.indices.delete({
       index
@@ -74,7 +75,8 @@ export class ESModel {
   }
 
   create (attrs, callback) {
-    const { Client, Class, index, type } = this
+    const { CONFIG, Class, index, type } = this
+    const Client = new ESClient(CONFIG)
     const body = new Class(attrs)
     const { id } = body
 
@@ -95,7 +97,8 @@ export class ESModel {
   }
 
   findById (id, callback) {
-    const { Client, index, type } = this
+    const { CONFIG, index, type } = this
+    const Client = new ESClient(CONFIG)
 
     Client.get({
       index,
@@ -115,7 +118,8 @@ export class ESModel {
   }
 
   search (query, callback) {
-    const { Client, index } = this
+    const { CONFIG, index } = this
+    const Client = new ESClient(CONFIG)
     const body = {
       query
     }
@@ -141,7 +145,8 @@ export class ESModel {
   }
 
   scan (callback) {
-    const { Client, index } = this
+    const { CONFIG, index } = this
+    const Client = new ESClient(CONFIG)
     const body = {
       query: {
         match_all: {}
@@ -170,7 +175,8 @@ export class ESModel {
   }
 
   scroll (params, callback) {
-    const { Client, index } = this
+    const { CONFIG, index } = this
+    const Client = new ESClient(CONFIG)
     const { query, scrollDuration } = params
     const body = { query }
     let allRecords = []
@@ -203,7 +209,8 @@ export class ESModel {
   }
 
   update (attrs, callback) {
-    const { Client, index, type, Class } = this
+    const { CONFIG, index, type, Class } = this
+    const Client = new ESClient(CONFIG)
     const doc = new Class(attrs)
     const { id } = doc
     const body = { doc }
@@ -225,7 +232,8 @@ export class ESModel {
   }
 
   remove (id, callback) {
-    const { Client, index, type } = this
+    const { CONFIG, index, type } = this
+    const Client = new ESClient(CONFIG)
 
     Client.delete({
       index,
@@ -243,7 +251,8 @@ export class ESModel {
   }
 
   removeBy (query, callback) {
-    const { Client, index } = this
+    const { CONFIG, index } = this
+    const Client = new ESClient(CONFIG)
     const body = { query }
 
     Client.deleteByQuery({
