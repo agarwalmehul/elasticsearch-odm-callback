@@ -24,7 +24,7 @@ export class ESRouteHandler {
 
     Model.createIndex(error => {
       let responseBody
-      if (this._handleError(error, response)) { return }
+      if (this._handleError(error, response)) { return next() }
 
       responseBody = new ResponseBody(200, 'OK')
       response.body = responseBody
@@ -37,7 +37,7 @@ export class ESRouteHandler {
 
     Model.removeIndex(error => {
       let responseBody
-      if (this._handleError(error, response)) { return }
+      if (this._handleError(error, response)) { return next() }
 
       responseBody = new ResponseBody(200, 'OK')
       response.body = responseBody
