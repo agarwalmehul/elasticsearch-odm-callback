@@ -24,6 +24,7 @@ export class ESModel {
     this.createIndex = this.createIndex.bind(this)
     this.removeIndex = this.removeIndex.bind(this)
     this.create = this.create.bind(this)
+    this.createWithIndex = this.createWithIndex.bind(this)
     this.findById = this.findById.bind(this)
     this.search = this.search.bind(this)
     this.scan = this.scan.bind(this)
@@ -94,6 +95,77 @@ export class ESModel {
 
       return callback(null, body)
     })
+  }
+
+  createWithIndex (attrs, options, callback) {
+    const { CONFIG, Class, type } = this
+    const body = new Class(attrs)
+    const { id } = body
+    const { getDynamicIndex } = options
+
+    if (typeof getDynamicIndex !== 'function') {
+      const err = new ResponseBody(500, "Require 'getDynamicIndex()' to Create Document")
+      return process.nextTick(() => callback(err))
+    }
+
+    const index = getDynamicIndex(body)
+    if (!index) {
+      const err = new ResponseBody(500, "Invalid Index Found: '" + index + "'")
+      return process.nextTick(() => callback(err))
+    }
+
+    async.waterfall([
+      // Check if Index Exists
+      next => {
+        const Client = new ESClient(CONFIG)
+        Client.indices.exists({ index }, (error, indexExists) => {
+          Client.close()
+          next(error, indexExists)
+        })
+      },
+
+      // Create Index if it does not Exist
+      (indexExists, next) => {
+        if (!indexExists) { return process.nextTick(next) }
+
+        const Client = new ESClient(CONFIG)
+        Client.indices.create({
+          index,
+          body
+        }, (error, response) => {
+          Client.close()
+
+          if (error) {
+            const { status, displayName, message } = error
+            const responseBody = new ResponseBody(status || 500, displayName, message)
+            return next(responseBody)
+          }
+
+          next()
+        })
+      },
+
+      // Create Document
+      next => {
+        const Client = new ESClient(CONFIG)
+        Client.create({
+          index,
+          type,
+          id,
+          body
+        }, (error, response) => {
+          Client.close()
+
+          if (error) {
+            const { status, displayName } = error
+            const responseBody = new ResponseBody(status, displayName, error)
+            return next(responseBody)
+          }
+
+          return next(null, body)
+        })
+      }
+    ], callback)
   }
 
   findById (id, callback) {
