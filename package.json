@@ -1,6 +1,6 @@
 {
   "name": "elasticsearch-odm-callback",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Elasticsearch Object Document Mapping using Callback Pattern",
   "main": "dist/index.js",
   "scripts": {
