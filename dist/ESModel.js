@@ -46,6 +46,7 @@ var ESModel = exports.ESModel = function () {
     this.createIndex = this.createIndex.bind(this);
     this.removeIndex = this.removeIndex.bind(this);
     this.create = this.create.bind(this);
+    this.createWithIndex = this.createWithIndex.bind(this);
     this.findById = this.findById.bind(this);
     this.search = this.search.bind(this);
     this.scan = this.scan.bind(this);
@@ -137,6 +138,92 @@ var ESModel = exports.ESModel = function () {
 
         return callback(null, body);
       });
+    }
+  }, {
+    key: 'createWithIndex',
+    value: function createWithIndex(attrs, options, callback) {
+      var CONFIG = this.CONFIG,
+          Class = this.Class,
+          type = this.type;
+
+      var body = new Class(attrs);
+      var id = body.id;
+      var getDynamicIndex = options.getDynamicIndex;
+
+
+      if (typeof getDynamicIndex !== 'function') {
+        var err = new _ResponseBody.ResponseBody(500, "Require 'getDynamicIndex()' to Create Document");
+        return process.nextTick(function () {
+          return callback(err);
+        });
+      }
+
+      var index = getDynamicIndex(body);
+      if (!index) {
+        var _err = new _ResponseBody.ResponseBody(500, "Invalid Index Found: '" + index + "'");
+        return process.nextTick(function () {
+          return callback(_err);
+        });
+      }
+
+      async.waterfall([
+      // Check if Index Exists
+      function (next) {
+        var Client = new _ESClient.ESClient(CONFIG);
+        Client.indices.exists({ index: index }, function (error, indexExists) {
+          Client.close();
+          next(error, indexExists);
+        });
+      },
+
+      // Create Index if it does not Exist
+      function (indexExists, next) {
+        if (!indexExists) {
+          return process.nextTick(next);
+        }
+
+        var Client = new _ESClient.ESClient(CONFIG);
+        Client.indices.create({
+          index: index,
+          body: body
+        }, function (error, response) {
+          Client.close();
+
+          if (error) {
+            var status = error.status,
+                displayName = error.displayName,
+                message = error.message;
+
+            var responseBody = new _ResponseBody.ResponseBody(status || 500, displayName, message);
+            return next(responseBody);
+          }
+
+          next();
+        });
+      },
+
+      // Create Document
+      function (next) {
+        var Client = new _ESClient.ESClient(CONFIG);
+        Client.create({
+          index: index,
+          type: type,
+          id: id,
+          body: body
+        }, function (error, response) {
+          Client.close();
+
+          if (error) {
+            var status = error.status,
+                displayName = error.displayName;
+
+            var responseBody = new _ResponseBody.ResponseBody(status, displayName, error);
+            return next(responseBody);
+          }
+
+          return next(null, body);
+        });
+      }], callback);
     }
   }, {
     key: 'findById',

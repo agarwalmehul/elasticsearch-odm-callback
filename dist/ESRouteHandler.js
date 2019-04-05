@@ -41,7 +41,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
       Model.createIndex(function (error) {
         var responseBody = void 0;
         if (_this._handleError(error, response)) {
-          return;
+          return next();
         }
 
         responseBody = new _ResponseBody.ResponseBody(200, 'OK');
@@ -60,7 +60,7 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
       Model.removeIndex(function (error) {
         var responseBody = void 0;
         if (_this2._handleError(error, response)) {
-          return;
+          return next();
         }
 
         responseBody = new _ResponseBody.ResponseBody(200, 'OK');
