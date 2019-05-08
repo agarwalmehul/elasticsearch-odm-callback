@@ -189,12 +189,9 @@ export class ESModel {
     })
   }
 
-  search (query, callback) {
+  search (body, callback) {
     const { CONFIG, index } = this
     const Client = new ESClient(CONFIG)
-    const body = {
-      query
-    }
 
     Client.search({
       index,

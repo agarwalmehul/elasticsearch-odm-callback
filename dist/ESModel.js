@@ -258,14 +258,11 @@ var ESModel = exports.ESModel = function () {
     }
   }, {
     key: 'search',
-    value: function search(query, callback) {
+    value: function search(body, callback) {
       var CONFIG = this.CONFIG,
           index = this.index;
 
       var Client = new _ESClient.ESClient(CONFIG);
-      var body = {
-        query: query
-      };
 
       Client.search({
         index: index,
