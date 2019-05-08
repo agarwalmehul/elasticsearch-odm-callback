@@ -83,8 +83,10 @@ export class ESRouteHandler {
 
     const { Model } = this
     const { query } = request
+    const searchQuery = { match: query }
+    const searchBody = { query: searchQuery }
 
-    Model.search({ match: query }, (error, data) => {
+    Model.search(searchBody, (error, data) => {
       let responseBody
       if (this._handleError(error, response)) { return next() }
 

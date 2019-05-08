@@ -129,8 +129,10 @@ var ESRouteHandler = exports.ESRouteHandler = function () {
       var Model = this.Model;
       var query = request.query;
 
+      var searchQuery = { match: query };
+      var searchBody = { query: searchQuery };
 
-      Model.search({ match: query }, function (error, data) {
+      Model.search(searchBody, function (error, data) {
         var responseBody = void 0;
         if (_this5._handleError(error, response)) {
           return next();
