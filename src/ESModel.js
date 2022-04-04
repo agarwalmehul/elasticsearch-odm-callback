@@ -220,7 +220,7 @@ export class ESModel {
       query: {
         match_all: {}
       },
-      size: 100
+      size: process.env.ES_SCAN_SIZE || 100
     }
 
     Client.search({
